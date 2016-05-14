@@ -2,7 +2,7 @@
 
 #include "cpplib/common/exception.hpp"
 #include "cpplib/common/file.hpp"
-#include "cpplib/draw/gl/mdl.hpp"
+#include "cpplib/draw/mdl.hpp"
 #include "cpplib/draw/tga.hpp"
 
 #include <stdint.h>
