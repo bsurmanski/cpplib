@@ -43,6 +43,18 @@ String::String(const char *str) {
 	}
 }
 
+String::String(const char *str, size_t n) {
+    len = n;
+	capacity = MAX(len, STRING_LONG);
+	if(len > STRING_LONG) {
+		refdata = (_StringData*) malloc(capacity + sizeof(_StringData));
+		refdata->refcount = 1;
+		memcpy(refdata->data, str, len);
+	} else {
+		memcpy(data, str, len);
+	}
+}
+
 String::String(const String& o) {
 	len = o.len;
 	capacity = o.capacity;

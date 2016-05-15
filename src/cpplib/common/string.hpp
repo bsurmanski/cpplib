@@ -33,6 +33,7 @@ class String {
 	public:
 	String();
 	String(const char *str);
+	String(const char *str, size_t n);
 	String(const String& o);
 	String(char c);
 	~String();

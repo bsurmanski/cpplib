@@ -7,7 +7,8 @@ src = {'common': ['cpplib/common/char.cpp',
                   'cpplib/common/exception.cpp',
                   'cpplib/common/file.cpp',
                   'cpplib/common/object.cpp',
-                  'cpplib/common/string.cpp'],
+                  'cpplib/common/string.cpp',
+                  'cpplib/common/stringInput.cpp'],
         'draw': ['cpplib/draw/camera.cpp',
                  'cpplib/draw/gl/framebuffer.cpp',
                  'cpplib/draw/gl/mesh.cpp',
@@ -30,6 +31,7 @@ test_src = ['test/ball_test.cpp',
             'test/mat_test.cpp',
             'test/string_test.cpp',
             'test/mdl_test.cpp']
+
 
 libs=['-lGLEW', '-lGL', '-lSDL']
 cxxflags=['-Isrc', '-g', '-O0', '-fPIC']
