@@ -5,6 +5,8 @@
 #include <GL/gl.h>
 #include <stdint.h>
 
+#include "cpplib/draw/mesh.hpp"
+
 namespace GL {
 
 struct Vertex {
@@ -20,25 +22,18 @@ struct Vertex {
 
 struct Face {
     uint16_t vertex_ids[3];
-    uint16_t incident_edge_id;
 };
 
-struct Edge {
-    uint16_t vertex_ids[2]; // first and second vert that forms an edge
-    uint16_t face_ids[2]; // left and right face (when viewed from vert[0] to vert[1]
-    uint16_t first_edges[2]; // edges cw and ccw from vertex[0]
-    uint16_t second_edges[2]; // edges cw and ccw from vertex[1]
-};
-
-// Mesh representation in GPU memory
-class Mesh {
+// Model representation in GPU memory
+class Model {
     GLuint ibo;
     GLuint vbo;
     int nelems;
 
     public:
-    Mesh();
-    ~Mesh();
+    Model();
+    ~Model();
+    static Model *fromMesh(Mesh *mesh);
     void uploadVertexData(Vertex *verts, int nverts);
     void uploadFaceData(Face *faces, int nfaces);
     void bind();

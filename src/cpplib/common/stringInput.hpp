@@ -1,9 +1,10 @@
 #ifndef _STRINGINPUT_HPP
 #define _STRINGINPUT_HPP
 
+#include "cpplib/common/input.hpp"
 #include "cpplib/common/string.hpp"
 
-class StringInput {
+class StringInput : public Input {
     long offset;
     String str;
 

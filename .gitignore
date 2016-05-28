@@ -1,6 +1,7 @@
 test/gtest
 test/sample
 test/res
+build/
 *.o
 *.so
 .tup

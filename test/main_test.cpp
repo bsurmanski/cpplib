@@ -12,9 +12,14 @@ DrawDevice *drawDevice;
 int main(int argc, char **argv) {
     window = new SDLWindow(320, 320, "test");
     drawDevice = new DrawDevice(320, 320);
+    //Mesh *m = Mesh::load(File("cube.msh"));
+    //GL::Mesh glm = m->toGLMesh();
+    //RGBATexture glt(1,1);
     for(int i = 0; i < 200; i++) {
         drawDevice->clear();
-        drawDevice->test();
+        drawDevice->clearFramebuffer();
+        //drawDevice->drawMesh(&glm, &glt);
+        drawDevice->blitFramebuffer();
         window->SwapBuffers();
         usleep(10);
     }

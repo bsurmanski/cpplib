@@ -1,7 +1,7 @@
 #include "entity.hpp"
 
-Entity::Entity(GL::Mesh *_mesh, GL::Texture *_texture) : 
-    mesh(_mesh), 
+Entity::Entity(GL::Model *_model, GL::Texture *_texture) :
+    model(_model),
     texture(_texture),
     scale(Vec4(1.0, 1.0, 1.0, 0.0)) {
 }

@@ -2,23 +2,23 @@
 
 #include "cpplib/common/exception.hpp"
 #include "cpplib/common/file.hpp"
-#include "cpplib/draw/mdl.hpp"
+#include "cpplib/draw/mesh.hpp"
 #include "cpplib/draw/tga.hpp"
 
 #include <stdint.h>
 
-void Scene::registerMesh(const String &k, GL::Mesh *m) {
-    meshes[k] = m;
+void Scene::registerModel(const String &k, GL::Model *m) {
+    models[k] = m;
 }
 
 void Scene::registerTexture(const String &k, GL::Texture *t) {
     textures[k] = t;
 }
 
-void Scene::loadMeshFromFile(const String &k, const String &filenm) {
+void Scene::loadModelFromFile(const String &k, const String &filenm) {
     File f(filenm);
-    GL::Mesh *m = loadMdl(&f);
-    meshes[k] = m;
+    GL::Model *m = loadMdl(&f);
+    models[k] = m;
 }
 
 void Scene::loadTextureFromFile(const String &k, const String &filenm) {
@@ -27,8 +27,8 @@ void Scene::loadTextureFromFile(const String &k, const String &filenm) {
     textures[k] = t;
 }
 
-GL::Mesh *Scene::getMesh(const String &k) {
-    return meshes.at(k);
+GL::Model *Scene::getModel(const String &k) {
+    return model.at(k);
 }
 
 GL::Texture *Scene::getTexture(const String &k) {
@@ -40,7 +40,7 @@ Entity *Scene::addEntity(const String &k) {
 }
 
 Entity *Scene::addEntity(const String &mk, const String &tk) {
-    GL::Mesh *m = meshes.at(mk);
+    GL::Model *m = models.at(mk);
     GL::Texture *t = textures.at(tk);
     Entity *e = new Entity(m, t);
     entities.push_back(e);

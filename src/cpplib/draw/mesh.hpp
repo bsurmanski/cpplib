@@ -5,6 +5,10 @@
 
 #include <stdint.h>
 
+namespace GL {
+class Model;
+};
+
 struct MeshHeader {
     uint8_t magic[3];
     uint8_t version;
@@ -13,6 +17,7 @@ struct MeshHeader {
     uint16_t nfaces;
     uint16_t nedges;
     uint8_t nbones;
+    uint8_t PADDING1[2];
     uint8_t name[16];
 };
 
@@ -55,6 +60,8 @@ struct Mesh {
 
     public:
     static Mesh *load(Input *in);
+
+    friend class GL::Model;
 };
 
 #endif

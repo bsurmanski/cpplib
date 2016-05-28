@@ -1,4 +1,4 @@
-#include "mdl.hpp"
+#include "mesh.hpp"
 
 #include "cpplib/common/exception.hpp"
 
@@ -14,6 +14,7 @@ Mesh::~Mesh() {
     delete[] edges;
 }
 
+#include <stdio.h>
 Mesh *Mesh::load(Input *in) {
     MeshHeader header;
     in->read(&header, sizeof(MeshHeader), 1);
@@ -32,14 +33,14 @@ Mesh *Mesh::load(Input *in) {
     MeshEdge *edges;
 
     in->read(sep, 4, 1);
-    if(!strncmp(sep, "VERT", 4)) {
+    if(strncmp(sep, "VERT", 4)) {
         throw Exception("Expected Vertex header in MSH file");
     }
     verts = new MeshVertex[header.nverts];
     in->read(verts, sizeof(MeshVertex), header.nverts);
 
     in->read(sep, 4, 1);
-    if(!strncmp(sep, "UVUV", 4)) {
+    if(strncmp(sep, "UVUV", 4)) {
         delete[] verts;
         throw Exception("Expected UV header in MSH file");
     }
@@ -47,7 +48,7 @@ Mesh *Mesh::load(Input *in) {
     in->read(uvs, sizeof(MeshUv), header.nuvs);
 
     in->read(sep, 4, 1);
-    if(!strncmp(sep, "FACE", 4)) {
+    if(strncmp(sep, "FACE", 4)) {
         delete[] verts;
         delete[] uvs;
         throw Exception("Expected Face header in MSH file");
@@ -56,7 +57,7 @@ Mesh *Mesh::load(Input *in) {
     in->read(faces, sizeof(MeshFace), header.nfaces);
 
     in->read(sep, 4, 1);
-    if(!strncmp(sep, "EDGE", 4)) {
+    if(strncmp(sep, "EDGE", 4)) {
         delete[] verts;
         delete[] uvs;
         delete[] faces;
