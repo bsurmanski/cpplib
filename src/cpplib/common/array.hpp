@@ -6,17 +6,16 @@
 #include "object.hpp"
 
 template<typename T>
-class Array : public Object {
+class Slice : public Object {
+    protected:
     size_t sz;
     T *data;
 
     public:
-    Array(size_t sz) {
-        data = new T[sz];
+    Slice(size_t _sz, T *_data) : sz(_sz), data(_data) {
     }
 
-    ~Array() {
-        delete[] data;
+    virtual ~Slice() {
     }
 
     size_t length() const {
@@ -45,6 +44,18 @@ class Array : public Object {
 
     void set(size_t i, T &v) {
         data[i] = v;
+    }
+};
+
+// An array is just a slice that owns its data.
+template<typename T>
+class Array : public Slice<T> {
+    public:
+    Array(size_t _sz) : Slice<T>(_sz, new T[_sz]) {
+    }
+
+    virtual ~Array() {
+        delete[] this->data;
     }
 };
 

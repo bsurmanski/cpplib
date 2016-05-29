@@ -5,7 +5,7 @@
 #include <GL/gl.h>
 #include <stdint.h>
 
-#include "cpplib/draw/mesh.hpp"
+#include "cpplib/geom/mesh.hpp"
 
 namespace GL {
 

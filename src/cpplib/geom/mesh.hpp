@@ -2,12 +2,9 @@
 #define _DRAW_MDL_HPP
 
 #include "cpplib/common/input.hpp"
+#include "cpplib/common/array.hpp"
 
 #include <stdint.h>
-
-namespace GL {
-class Model;
-};
 
 struct MeshHeader {
     uint8_t magic[3];
@@ -55,13 +52,16 @@ struct Mesh {
     MeshFace *faces;
     MeshEdge *edges;
 
+    public:
     Mesh(MeshHeader &header, MeshVertex *v, MeshUv *u, MeshFace *f, MeshEdge *e);
     ~Mesh();
 
-    public:
-    static Mesh *load(Input *in);
+    Slice<MeshVertex> getVertices();
+    Slice<MeshUv> getUvs();
+    Slice<MeshFace> getFaces();
+    Slice<MeshEdge> getEdges();
 
-    friend class GL::Model;
+    static Mesh *load(Input *in);
 };
 
 #endif

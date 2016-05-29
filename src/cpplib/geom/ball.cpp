@@ -39,3 +39,15 @@ bool Ball::collides(const Ball &o) {
     float dvsq = _center.distsq(o._center);
     return drsq > dvsq;
 }
+
+Vec4 Ball::closestPointTo(Vec4 &o) {
+    if(contains(o)) {
+        return o;
+    }
+
+    return ((o - _center).normalized() * _radius) + _center;
+}
+
+bool Ball::contains(Vec4 &o) {
+    return _center.distsq(o) < _radius * _radius;
+}

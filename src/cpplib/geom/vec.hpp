@@ -31,6 +31,7 @@ class Vec4 {
     Vec4 operator-(const Vec4 &o) const;
     float &operator[](int i);
     float operator[](int i) const;
+    Vec4 operator*(float f) const;
     Vec4 operator*(const Mat4 &o) const;
     Vec4 mul(const Mat4 &o) const;
     Vec4 qMul(const Vec4 &o) const;

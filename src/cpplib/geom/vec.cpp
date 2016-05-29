@@ -64,6 +64,10 @@ void Vec4::set(int i, float val) {
     v[i] = val;
 }
 
+Vec4 Vec4::operator*(float f) const {
+    return this->scaled(f);
+}
+
 Vec4 Vec4::operator*(const Mat4 &o) const {
     return this->mul(o);
 }

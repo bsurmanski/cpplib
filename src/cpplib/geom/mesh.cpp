@@ -14,7 +14,22 @@ Mesh::~Mesh() {
     delete[] edges;
 }
 
-#include <stdio.h>
+Slice<MeshVertex> Mesh::getVertices() {
+    return Slice<MeshVertex>(header.nverts, verts);
+}
+
+Slice<MeshUv> Mesh::getUvs() {
+    return Slice<MeshUv>(header.nuvs, uvs);
+}
+
+Slice<MeshFace> Mesh::getFaces() {
+    return Slice<MeshFace>(header.nfaces, faces);
+}
+
+Slice<MeshEdge> Mesh::getEdges() {
+    return Slice<MeshEdge>(header.nedges, edges);
+}
+
 Mesh *Mesh::load(Input *in) {
     MeshHeader header;
     in->read(&header, sizeof(MeshHeader), 1);

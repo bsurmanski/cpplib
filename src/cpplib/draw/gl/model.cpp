@@ -43,41 +43,37 @@ Model *Model::fromMesh(Mesh *mesh) {
     GL::Face *f = new GL::Face[mesh->header.nfaces];
     GL::Vertex *v = new GL::Vertex[mesh->header.nuvs];
 
-    printf("FACE\n");
-    for(int i = 0; i < mesh->header.nfaces; i++) {
+    Slice<MeshFace> meshFaces = mesh->getFaces();
+    for(int i = 0; i < meshFaces.length(); i++) {
         for(int j = 0; j < 3; j++) {
-            f[i].vertex_ids[j] = mesh->faces[i].uvs[j];
-            printf("%d,", mesh->faces[i].uvs[j]);
+            f[i].vertex_ids[j] = meshFaces[i].uvs[j];
         }
-        printf("\n");
     }
 
-    printf("VERT\n");
-    for(int i = 0; i < mesh->header.nuvs; i++) {
-        MeshVertex *mvert = &mesh->verts[mesh->uvs[i].vert_id];
-        printf("%d\n", mesh->uvs[i].vert_id);
-        printf("%f, %f, %f\n", mvert->position[0], mvert->position[1], mvert->position[2]);
-        v[i].position[0] = mvert->position[0];
-        v[i].position[1] = mvert->position[1];
-        v[i].position[2] = mvert->position[2];
-        v[i].normal[0] = mvert->normal[0];
-        v[i].normal[1] = mvert->normal[1];
-        v[i].normal[2] = mvert->normal[2];
-        printf("%d %d\n", mesh->uvs[i].uv[0], mesh->uvs[i].uv[1]);
-        v[i].uv[0] = mesh->uvs[i].uv[0];
-        v[i].uv[1] = mesh->uvs[i].uv[1];
+    Slice<MeshVertex> meshVertices = mesh->getVertices();
+    Slice<MeshUv> meshUvs = mesh->getUvs();
+    for(int i = 0; i < meshUvs.length(); i++) {
+        MeshVertex &mvert = meshVertices[meshUvs[i].vert_id];
+        v[i].position[0] = mvert.position[0];
+        v[i].position[1] = mvert.position[1];
+        v[i].position[2] = mvert.position[2];
+        v[i].normal[0] = mvert.normal[0];
+        v[i].normal[1] = mvert.normal[1];
+        v[i].normal[2] = mvert.normal[2];
+        v[i].uv[0] = meshUvs[i].uv[0];
+        v[i].uv[1] = meshUvs[i].uv[1];
         v[i].color[0] = 0;
         v[i].color[1] = 0;
         v[i].color[2] = 0;
         v[i].material = 0;
-        v[i].boneid[0] = mvert->bone_id[0];
-        v[i].boneid[1] = mvert->bone_id[1];
-        v[i].boneweight[0] = mvert->bone_weight[0];
-        v[i].boneweight[1] = mvert->bone_weight[1];
+        v[i].boneid[0] = mvert.bone_id[0];
+        v[i].boneid[1] = mvert.bone_id[1];
+        v[i].boneweight[0] = mvert.bone_weight[0];
+        v[i].boneweight[1] = mvert.bone_weight[1];
     }
 
-    gm->uploadVertexData(v, mesh->header.nuvs);
-    gm->uploadFaceData(f, mesh->header.nfaces);
+    gm->uploadVertexData(v, meshUvs.length());
+    gm->uploadFaceData(f, meshFaces.length());
 
     delete[] v;
     delete[] f;
