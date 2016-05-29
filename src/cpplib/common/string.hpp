@@ -4,16 +4,11 @@
 #include <stdlib.h>
 #include <ostream>
 
+#include "array.hpp"
+#include "object.hpp"
+
 #define STRING_LONG 28
 #define STRING_APPEND_PAD 16
-
-struct _StringData {
-	int refcount;
-	char data[];
-
-	_StringData *retain();
-	bool release();
-};
 
 class String {
 	int capacity;
@@ -24,7 +19,7 @@ class String {
 	// faster by avoiding memory allocation.
     union {
         char data[STRING_LONG];
-		_StringData *refdata;
+        Array<char> *refdata;
     };
 
 	bool isLong() const;

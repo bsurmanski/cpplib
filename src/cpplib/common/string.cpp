@@ -11,20 +11,6 @@
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
 #define MIN(A, B) ((A) > (B) ? (B) : (A))
 
-_StringData *_StringData::retain() {
-	refcount++;
-	return this;
-}
-
-bool _StringData::release() {
-	refcount--;
-	if(refcount <= 0) {
-		free(this);
-		return true;
-	}
-	return false;
-}
-
 String::String() {
 	len = 0;
 	capacity = STRING_LONG;
@@ -35,9 +21,8 @@ String::String(const char *str) {
 	len = strl;
 	capacity = MAX(len, STRING_LONG);
 	if(len > STRING_LONG) {
-		refdata = (_StringData*) malloc(capacity + sizeof(_StringData));
-		refdata->refcount = 1;
-		memcpy(refdata->data, str, len);
+		refdata = new Array<char>(capacity);
+		memcpy(refdata->ptr(), str, len);
 	} else {
 		memcpy(data, str, len);
 	}
@@ -47,9 +32,8 @@ String::String(const char *str, size_t n) {
     len = n;
 	capacity = MAX(len, STRING_LONG);
 	if(len > STRING_LONG) {
-		refdata = (_StringData*) malloc(capacity + sizeof(_StringData));
-		refdata->refcount = 1;
-		memcpy(refdata->data, str, len);
+		refdata = new Array<char>(capacity);
+		memcpy(refdata->ptr(), str, len);
 	} else {
 		memcpy(data, str, len);
 	}
@@ -59,7 +43,8 @@ String::String(const String& o) {
 	len = o.len;
 	capacity = o.capacity;
 	if(o.isLong()) {
-		refdata = o.refdata->retain();
+        o.refdata->retain();
+		refdata = o.refdata;
 	} else {
 		memcpy(data, o.data, o.len);
 	}
@@ -112,20 +97,19 @@ bool String::isLong() const {
 
 void String::resize(int cap) {
 	if(cap > capacity && cap > STRING_LONG) {
-		_StringData *ndata = (_StringData*) malloc(cap + sizeof(_StringData));
+		Array<char> *ndata = new Array<char>(cap);
 		assert(ndata);
-		ndata->refcount = 1;
 		if(isLong()) {
-			memcpy(ndata->data, refdata->data, len);
+			memcpy(ndata->ptr(), refdata->ptr(), len);
 			refdata->release();
 		} else {
-			memcpy(ndata->data, &this->data[0], len);
+			memcpy(ndata->ptr(), &this->data[0], len);
 		}
 		capacity = cap;
 		refdata = ndata;
 	} else if(capacity > STRING_LONG && cap < STRING_LONG) { // we are shrinking across 'LONG' boundary
-		_StringData *old = refdata;
-		memcpy(data, refdata->data, len);
+		Array<char> *old = refdata;
+		memcpy(data, refdata->ptr(), len);
 		old->release();
 	}
 }
@@ -146,7 +130,8 @@ String &String::operator=(const String &o) {
 	len = o.len;
 	capacity = o.capacity;
 	if(o.isLong()) {
-		refdata = o.refdata->retain();
+        o.refdata->retain();
+		refdata = o.refdata;
 	} else {
 		memcpy(data, o.data, o.len);
 	}
@@ -212,7 +197,7 @@ const char &String::charAt(int i) const {
 	}
 
 	if(isLong()) {
-		return refdata->data[i];
+		return refdata->get(i);
 	} else {
 		return data[i];
 	}
@@ -224,7 +209,7 @@ char &String::charAt(int i) {
 	}
 
 	if(isLong()) {
-		return refdata->data[i];
+		return refdata->get(i);
 	} else {
 		return data[i];
 	}
@@ -301,7 +286,7 @@ char *String::c_str() {
 
 char *String::dataPtr() {
 	if(isLong()) {
-		return refdata->data;
+		return refdata->ptr();
 	} else {
 		return data;
 	}
@@ -309,7 +294,7 @@ char *String::dataPtr() {
 
 const char *String::dataPtr() const {
 	if(isLong()) {
-		return refdata->data;
+		return refdata->ptr();
 	} else {
 		return data;
 	}
@@ -322,7 +307,7 @@ size_t String::copy(char *dst, size_t len, size_t pos) const {
     }
 
 	if(isLong()) {
-		memcpy(dst, &refdata->data[pos], n);
+		memcpy(dst, &refdata->ptr()[pos], n);
 	} else {
 		memcpy(dst, &data[pos], n);
 	}
