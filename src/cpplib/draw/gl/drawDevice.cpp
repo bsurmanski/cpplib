@@ -116,6 +116,11 @@ void DrawDevice::drawModel(Model *m, Texture *t, const Mat4 &mv) {
     bindStandardAttributes(simple_program);
     Mat4 f = frustum * mv;
     simple_program->setUniform("mvp", f);
+
+    static float tick = 0.0f;
+    tick += 0.01f;
+    simple_program->setUniformFloat("tick", tick);
+
     m->draw();
 }
 
@@ -132,9 +137,6 @@ void DrawDevice::blitFramebuffer() {
     deferred_program->setUniformInt("t_color", 0);
     deferred_program->setUniformInt("t_normal", 1);
     deferred_program->setUniformInt("t_depth", 2);
-    static float tick = 0.0f;
-    tick += 0.01f;
-    deferred_program->setUniformFloat("tick", tick);
     plane->draw();
 
     int err = glGetError();
