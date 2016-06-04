@@ -24,6 +24,7 @@ class DrawDevice {
     Model *plane;
 
     int w,h;
+    Mat4 frustum;
 
     void bindStandardAttributes(Program *program);
 

@@ -52,6 +52,10 @@ float Vec4::operator[](int i) const {
 }
 
 
+float *Vec4::ptr() {
+    return v;
+}
+
 float &Vec4::get(int i) {
     return v[i];
 }

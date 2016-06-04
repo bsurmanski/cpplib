@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "cpplib/draw/mesh.hpp"
+#include "cpplib/geom/mesh.hpp"
 #include "cpplib/common/file.hpp"
 
 TEST(Mdl, Load) {

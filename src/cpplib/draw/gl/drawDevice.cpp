@@ -1,6 +1,9 @@
 #include "drawDevice.hpp"
 
+#include <stdio.h>
+
 #include "cpplib/common/stringInput.hpp"
+
 
 using GL::DrawDevice;
 using GL::Framebuffer;
@@ -58,6 +61,8 @@ DrawDevice::DrawDevice(int _w, int _h) : w(_w), h(_h) {
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+
+    frustum = Mat4::createFrustumMatrix(-1, 1, -1, 1, 2, 1000);
 }
 
 void DrawDevice::bindStandardAttributes(Program *prog) {
@@ -101,7 +106,18 @@ void DrawDevice::clearFramebuffer() {
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-#include <stdio.h>
+void DrawDevice::drawModel(Model *m, Texture *t, const Mat4 &mv) {
+    glEnable(GL_DEPTH_TEST);
+    main_buffer->bind();
+
+    t->bind();
+    simple_program->bind();
+    m->bind();
+    bindStandardAttributes(simple_program);
+    Mat4 f = frustum * mv;
+    simple_program->setUniform("mvp", f);
+    m->draw();
+}
 
 void DrawDevice::blitFramebuffer() {
     glDisable(GL_DEPTH_TEST);
@@ -113,12 +129,12 @@ void DrawDevice::blitFramebuffer() {
     deferred_program->bind();
     plane->bind();
     bindStandardAttributes(deferred_program);
-    glUniform1i(glGetUniformLocation(deferred_program->program, "t_color"), 0);
-    glUniform1i(glGetUniformLocation(deferred_program->program, "t_normal"), 1);
-    glUniform1i(glGetUniformLocation(deferred_program->program, "t_depth"), 2);
+    deferred_program->setUniformInt("t_color", 0);
+    deferred_program->setUniformInt("t_normal", 1);
+    deferred_program->setUniformInt("t_depth", 2);
     static float tick = 0.0f;
     tick += 0.01f;
-    glUniform1f(glGetUniformLocation(deferred_program->program, "tick"), tick);
+    deferred_program->setUniformFloat("tick", tick);
     plane->draw();
 
     int err = glGetError();

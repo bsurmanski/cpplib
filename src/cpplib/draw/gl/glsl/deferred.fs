@@ -9,6 +9,6 @@ out vec4 out_color;
 
 void main()
 {
-    //out_color = texture(t_color, fuv); 
-    out_color = vec4(fuv, tick, 1);
+    out_color = texture(t_color, fuv); 
+    //out_color = vec4(fuv, tick, 1);
 }

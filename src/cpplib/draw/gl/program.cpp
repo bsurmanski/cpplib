@@ -41,6 +41,22 @@ void Program::bind() {
     glUseProgram(program);
 }
 
+void Program::setUniform(const char *name, Mat4 &m) {
+    glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, m.ptr());
+}
+
+void Program::setUniform(const char *name, Vec4 &v) {
+    glUniform4fv(glGetUniformLocation(program, name), 1, v.ptr());
+}
+
+void Program::setUniformFloat(const char *name, float f) {
+    glUniform1f(glGetUniformLocation(program, name), f);
+}
+
+void Program::setUniformInt(const char *name, int i) {
+    glUniform1i(glGetUniformLocation(program, name), i);
+}
+
 StdProgram::StdProgram(Input *vs, Input *fs) {
     vso = glCreateShader(GL_VERTEX_SHADER);
     fso = glCreateShader(GL_FRAGMENT_SHADER);

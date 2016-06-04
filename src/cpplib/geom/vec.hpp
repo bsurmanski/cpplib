@@ -33,6 +33,7 @@ class Vec4 {
     float operator[](int i) const;
     Vec4 operator*(float f) const;
     Vec4 operator*(const Mat4 &o) const;
+    float *ptr();
     Vec4 mul(const Mat4 &o) const;
     Vec4 qMul(const Vec4 &o) const;
     Vec4 qRotate(const Vec4 &p) const;
