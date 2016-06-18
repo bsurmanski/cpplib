@@ -14,10 +14,11 @@ DrawDevice *drawDevice;
 int main(int argc, char **argv) {
     window = new SDLWindow(320, 320, "test");
     drawDevice = new DrawDevice(320, 320);
-    File f("cube.msh");
-    Mesh *m = Mesh::load(&f);
+    File mesh_f("cube.msh");
+    File tga_f("cube.tga");
+    Mesh *m = Mesh::load(&mesh_f);
     GL::Model *glm = GL::Model::fromMesh(m);
-    GL::RGBATexture glt(1,1);
+    GL::RGBATexture *glt = GL::RGBATexture::FromTga(tga_f);
     float tick = 0.0;
     for(int i = 0; i < 200; i++) {
         tick += 0.01;
@@ -26,7 +27,7 @@ int main(int argc, char **argv) {
         mat.translate(Vec4(0, 0, -5));
         drawDevice->clear();
         drawDevice->clearFramebuffer();
-        drawDevice->drawModel(glm, &glt, mat);
+        drawDevice->drawModel(glm, glt, mat);
         drawDevice->blitFramebuffer();
         window->SwapBuffers();
         usleep(10);

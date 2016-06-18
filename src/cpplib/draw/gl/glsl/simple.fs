@@ -6,8 +6,7 @@ uniform sampler2D tex;
 uniform float tick;
 
 void main(void) {
-    //vec4 c = texture2D(tex, texco);
-    //if(c.a < 0.1) discard;
-    //gl_FragColor = c;
-    gl_FragColor = vec4(texco, tick, 1);
+    vec4 c = texture2D(tex, texco);
+    if(c.a < 0.1) discard;
+    gl_FragColor = c;
 }
