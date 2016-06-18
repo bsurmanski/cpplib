@@ -1,8 +1,7 @@
 #ifndef _GEOM_BALL_HPP
 #define _GEOM_BALL_HPP
 
-#include "vec.hpp"
-#include "geometry.hpp"
+#include "cpplib/geom/geometry.hpp"
 
 class Ball : public Geometry {
     float _radius;
@@ -20,6 +19,7 @@ class Ball : public Geometry {
     bool collides(const Ball &o);
     virtual bool contains(Vec4 &o);
     virtual Vec4 closestPointTo(Vec4 &o);
+    virtual Vec4 surfaceTangent(Vec4 &n);
 };
 
 #endif

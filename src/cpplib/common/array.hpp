@@ -54,6 +54,17 @@ class Array : public Slice<T> {
     Array(size_t _sz) : Slice<T>(_sz, new T[_sz]) {
     }
 
+    Array(size_t _sz, T *_data) : Slice<T>(_sz, _data) {
+    }
+
+    Slice<T> slice() {
+        return Slice<T>(this->sz, this->data);
+    }
+
+    Slice<T> slice(int start, int end) {
+        return Slice<T>(end - start, &this->data[start]);
+    }
+
     virtual ~Array() {
         delete[] this->data;
     }

@@ -54,7 +54,7 @@ MerseneTwisterRNG::MerseneTwisterRNG(uint32_t seed) {
 }
 
 MerseneTwisterRNG::~MerseneTwisterRNG() {
-    delete _MT;
+    delete[] _MT;
 }
 
 void MerseneTwisterRNG::seed(uint32_t seed) {

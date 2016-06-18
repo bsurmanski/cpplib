@@ -48,6 +48,10 @@ Vec4 Ball::closestPointTo(Vec4 &o) {
     return ((o - _center).normalized() * _radius) + _center;
 }
 
+Vec4 Ball::surfaceTangent(Vec4 &n) {
+    return (n.normalized() * _radius) + _center;
+}
+
 bool Ball::contains(Vec4 &o) {
     return _center.distsq(o) < _radius * _radius;
 }

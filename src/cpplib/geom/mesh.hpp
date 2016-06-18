@@ -3,8 +3,11 @@
 
 #include "cpplib/common/input.hpp"
 #include "cpplib/common/array.hpp"
+#include "cpplib/geom/geometry.hpp"
 
 #include <stdint.h>
+
+class Mesh;
 
 struct MeshHeader {
     uint8_t magic[3];
@@ -25,6 +28,8 @@ struct MeshVertex {
     uint8_t bone_id[2];
     uint8_t bone_weight[2];
     uint16_t edge_id;
+
+    Vec4 getPosition();
 };
 
 struct MeshUv {
@@ -36,6 +41,9 @@ struct MeshUv {
 struct MeshFace {
     uint16_t uvs[3];
     uint16_t edge_id;
+
+    Vec4 getNormal(Mesh *mesh);
+    MeshVertex *getVertex(Mesh *mesh, int i);
 };
 
 struct MeshEdge {
@@ -47,10 +55,18 @@ struct MeshEdge {
 
 struct Mesh {
     MeshHeader header;
-    MeshVertex *verts;
-    MeshUv *uvs;
-    MeshFace *faces;
-    MeshEdge *edges;
+    Array<MeshVertex> verts;
+    Array<MeshUv> uvs;
+    Array<MeshFace> faces;
+    Array<MeshEdge> edges;
+
+    enum Convexity {
+        UNKNOWN,
+        CONVEX,
+        CONCAVE,
+    };
+
+    Convexity convexity;
 
     public:
     Mesh(MeshHeader &header, MeshVertex *v, MeshUv *u, MeshFace *f, MeshEdge *e);
@@ -62,6 +78,11 @@ struct Mesh {
     Slice<MeshEdge> getEdges();
 
     static Mesh *load(Input *in);
+
+    bool isConvex();
+    virtual bool contains(Vec4 &o);
+    virtual Vec4 closestPointTo(Vec4 &o);
+    virtual Vec4 surfaceTangent(Vec4 &n);
 };
 
 #endif

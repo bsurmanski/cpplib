@@ -3,31 +3,42 @@
 #include "cpplib/common/exception.hpp"
 
 #include <string.h>
+#include <float.h>
+
+Vec4 MeshVertex::getPosition() {
+    return Vec4(position[0], position[1], position[2]);
+}
+
+MeshVertex *MeshFace::getVertex(Mesh *mesh, int i) {
+    return &mesh->verts[mesh->uvs[uvs[i]].vert_id];
+}
+
+Vec4 MeshFace::getNormal(Mesh *m) {
+    return (getVertex(m, 1)->getPosition() - getVertex(m, 0)->getPosition()).cross(
+            getVertex(m, 2)->getPosition() - getVertex(m, 0)->getPosition());
+}
 
 Mesh::Mesh(MeshHeader &h, MeshVertex *v, MeshUv *u, MeshFace *f, MeshEdge *e) :
-    header(h), verts(v), uvs(u), faces(f), edges(e) { }
+    header(h), verts(h.nverts, v), uvs(h.nuvs, u), faces(h.nfaces, f),
+    edges(h.nedges, e), convexity(UNKNOWN) { }
 
 Mesh::~Mesh() {
-    delete[] verts;
-    delete[] uvs;
-    delete[] faces;
-    delete[] edges;
 }
 
 Slice<MeshVertex> Mesh::getVertices() {
-    return Slice<MeshVertex>(header.nverts, verts);
+    return verts.slice();
 }
 
 Slice<MeshUv> Mesh::getUvs() {
-    return Slice<MeshUv>(header.nuvs, uvs);
+    return uvs.slice();
 }
 
 Slice<MeshFace> Mesh::getFaces() {
-    return Slice<MeshFace>(header.nfaces, faces);
+    return faces.slice();
 }
 
 Slice<MeshEdge> Mesh::getEdges() {
-    return Slice<MeshEdge>(header.nedges, edges);
+    return edges.slice();
 }
 
 Mesh *Mesh::load(Input *in) {
@@ -96,4 +107,43 @@ Mesh *Mesh::load(Input *in) {
 
     Mesh *mesh = new Mesh(header, verts, uvs, faces, edges);
     return mesh;
+}
+
+bool Mesh::isConvex() {
+    if(convexity == UNKNOWN) {
+        for(int i = 0; i < faces.length(); i++) {
+            Vec4 norm = faces[i].getNormal(this);
+            Vec4 base = faces[i].getVertex(this, 0)->getPosition();
+            for(int j = 0; j < verts.length(); i++) {
+                Vec4 delta = verts[j].getPosition() - base;
+                if(delta.dot(norm) > FLT_EPSILON) {
+                    convexity = CONCAVE;
+                    return convexity;
+                }
+            }
+        }
+        convexity = CONVEX;
+    }
+    return convexity == CONVEX;
+}
+
+bool Mesh::contains(Vec4 &o) {
+    if(!isConvex()) {
+        throw Exception("Mesh must be convex to check point containment");
+    }
+    //TODO
+}
+
+Vec4 Mesh::closestPointTo(Vec4 &o) {
+    if(!isConvex()) {
+        throw Exception("Mesh must be convex to check closest point");
+    }
+    //TODO
+}
+
+Vec4 Mesh::surfaceTangent(Vec4 &n) {
+    if(!isConvex()) {
+        throw Exception("Mesh must be convex to check surface tangent");
+    }
+    //TODO
 }
