@@ -43,17 +43,17 @@ Model *Model::fromMesh(Mesh *mesh) {
     GL::Face *f = new GL::Face[mesh->header.nfaces];
     GL::Vertex *v = new GL::Vertex[mesh->header.nuvs];
 
-    Slice<MeshFace> meshFaces = mesh->getFaces();
+    Slice<MeshFaceData> meshFaces = mesh->getFaces();
     for(int i = 0; i < meshFaces.length(); i++) {
         for(int j = 0; j < 3; j++) {
             f[i].vertex_ids[j] = meshFaces[i].uvs[j];
         }
     }
 
-    Slice<MeshVertex> meshVertices = mesh->getVertices();
-    Slice<MeshUv> meshUvs = mesh->getUvs();
+    Slice<MeshVertexData> meshVertices = mesh->getVertices();
+    Slice<MeshUvData> meshUvs = mesh->getUvs();
     for(int i = 0; i < meshUvs.length(); i++) {
-        MeshVertex &mvert = meshVertices[meshUvs[i].vert_id];
+        MeshVertexData &mvert = meshVertices[meshUvs[i].vert_id];
         v[i].position[0] = mvert.position[0];
         v[i].position[1] = mvert.position[1];
         v[i].position[2] = mvert.position[2];

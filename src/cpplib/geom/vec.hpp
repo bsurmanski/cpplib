@@ -2,6 +2,7 @@
 #define _GEOM_VEC_HPP
 
 class Mat4;
+
 class Vec4 {
     public:
     union {

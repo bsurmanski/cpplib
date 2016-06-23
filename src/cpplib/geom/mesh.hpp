@@ -1,9 +1,10 @@
-#ifndef _DRAW_MDL_HPP
-#define _DRAW_MDL_HPP
+#ifndef _GEOM_MESH_HPP
+#define _GEOM_MESH_HPP
 
 #include "cpplib/common/input.hpp"
 #include "cpplib/common/array.hpp"
 #include "cpplib/geom/geometry.hpp"
+#include "cpplib/geom/mesh_attr.hpp"
 
 #include <stdint.h>
 
@@ -21,7 +22,7 @@ struct MeshHeader {
     uint8_t name[16];
 };
 
-struct MeshVertex {
+struct MeshVertexData {
     float position[3];
     int16_t normal[3]; //normalized -32768 to 32767
     uint8_t PADDING1[8];
@@ -32,33 +33,34 @@ struct MeshVertex {
     Vec4 getPosition();
 };
 
-struct MeshUv {
+struct MeshUvData {
     uint16_t uv[2]; // normalized 0 to 65535
     uint16_t vert_id;
     uint16_t PADDING1;
 };
 
-struct MeshFace {
+struct MeshFaceData {
     uint16_t uvs[3];
     uint16_t edge_id;
 
     Vec4 getNormal(Mesh *mesh);
-    MeshVertex *getVertex(Mesh *mesh, int i);
+    MeshVertexData *getVertex(Mesh *mesh, int i);
 };
 
-struct MeshEdge {
+struct MeshEdgeData {
     uint16_t vert_id[2];
     uint16_t face_id[2];
     uint16_t left_edge_id[2]; // cw, ccw edge ids from first vertex
     uint16_t right_edge_id[2]; // cw, ccw edge ids from second vertex
 };
 
+
 struct Mesh {
     MeshHeader header;
-    Array<MeshVertex> verts;
-    Array<MeshUv> uvs;
-    Array<MeshFace> faces;
-    Array<MeshEdge> edges;
+    Array<MeshVertexData> verts;
+    Array<MeshUvData> uvs;
+    Array<MeshFaceData> faces;
+    Array<MeshEdgeData> edges;
 
     enum Convexity {
         UNKNOWN,
@@ -69,15 +71,21 @@ struct Mesh {
     Convexity convexity;
 
     public:
-    Mesh(MeshHeader &header, MeshVertex *v, MeshUv *u, MeshFace *f, MeshEdge *e);
+    Mesh(MeshHeader &header, MeshVertexData *v, MeshUvData *u, MeshFaceData *f, MeshEdgeData *e);
     ~Mesh();
 
-    Slice<MeshVertex> getVertices();
-    Slice<MeshUv> getUvs();
-    Slice<MeshFace> getFaces();
-    Slice<MeshEdge> getEdges();
+    Slice<MeshVertexData> getVertices();
+    Slice<MeshUvData> getUvs();
+    Slice<MeshFaceData> getFaces();
+    Slice<MeshEdgeData> getEdges();
 
     static Mesh *load(Input *in);
+
+    // given a vertex index 'base', What is the next vertex,
+    // connected to 'base' by edges, that is closer to point 'p' than base?
+    // If 'base' is the closest vertex, return 'base'.
+    Vertex nextClosestVertex(Vec4 &p, Vertex base);
+    Vertex closestVertex(Vec4 &p, Vertex start);
 
     bool isConvex();
     virtual bool contains(Vec4 &o);
