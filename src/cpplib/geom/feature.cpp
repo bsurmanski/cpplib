@@ -1,9 +1,9 @@
-#include "mesh_attr.hpp"
+#include "feature.hpp"
 
 #include "cpplib/geom/mesh.hpp"
 #include "cpplib/common/exception.hpp"
 
-MeshAttr::MeshAttr(Mesh *_mesh, int _index) : mesh(_mesh), index(_index) {}
+Feature::Feature(Mesh *_mesh, int _index) : mesh(_mesh), index(_index) {}
 
 MeshVertexData &Vertex::getVertexData() {
     return mesh->verts[index];
@@ -54,16 +54,6 @@ Vertex Edge::other(Vertex &v) {
     throw Exception("invalid vertex in edge lookup");
 }
 
-Face Edge::left() {
-    MeshEdgeData &data = getEdgeData();
-    return Face(mesh, data.face_id[0]);
-}
-
-Face Edge::right() {
-    MeshEdgeData &data = getEdgeData();
-    return Face(mesh, data.face_id[1]);
-}
-
 Edge Edge::cwFrom(Vertex &v) {
     MeshEdgeData &data = getEdgeData();
     if(v.getIndex() == front().getIndex()) {
@@ -82,4 +72,34 @@ Edge Edge::ccwFrom(Vertex &v) {
         return Edge(mesh, data.right_edge_id[1]);
     }
     throw Exception("invalid vertex in ccw traversal of edge");
+}
+
+Face Edge::left() {
+    MeshEdgeData &data = getEdgeData();
+    return Face(mesh, data.face_id[0]);
+}
+
+Face Edge::right() {
+    MeshEdgeData &data = getEdgeData();
+    return Face(mesh, data.face_id[1]);
+}
+
+Face Edge::leftFrom(Vertex &v) {
+    MeshEdgeData &data = getEdgeData();
+    if(v.getIndex() == front().getIndex()) {
+        return left();
+    } else if(v.getIndex() == back().getIndex()) {
+        return right();
+    }
+    throw Exception("invalid vertex in face retrieval");
+}
+
+Face Edge::rightFrom(Vertex &v) {
+    MeshEdgeData &data = getEdgeData();
+    if(v.getIndex() == front().getIndex()) {
+        return right();
+    } else if(v.getIndex() == back().getIndex()) {
+        return left();
+    }
+    throw Exception("invalid vertex in face retrieval");
 }

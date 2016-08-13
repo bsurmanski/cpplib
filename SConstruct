@@ -23,7 +23,7 @@ src = {'common': ['cpplib/common/char.cpp',
         'math': ['cpplib/geom/vec.cpp',
                  'cpplib/geom/ball.cpp',
                  'cpplib/geom/mesh.cpp',
-                 'cpplib/geom/mesh_attr.cpp',
+                 'cpplib/geom/feature.cpp',
                  'cpplib/math/random.cpp',
                  'cpplib/geom/mat.cpp']}
 

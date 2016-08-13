@@ -1,6 +1,6 @@
 #include "mesh.hpp"
 
-#include "cpplib/geom/mesh_attr.hpp"
+#include "cpplib/geom/feature.hpp"
 #include "cpplib/common/exception.hpp"
 
 #include <string.h>
@@ -195,12 +195,45 @@ Vec4 Mesh::closestPointTo(Vec4 &o) {
     if(!isConvex()) {
         throw Exception("Mesh must be convex to check closest point");
     }
-    //TODO
+
+    // get face with highest normal dot product to vector, then project point onto face.
+
+    Vertex pivot = closestVertex(o, Vertex(this, 0));
+    Edge start = pivot.getIncidentEdge();
+    Edge iter = start.cwFrom(pivot);
+    Face best = start.right();
+    int i = 0;
+    while(i++ < edges.length()) {
+        if(iter.getIndex() == start.getIndex()) {
+            return Vec4();
+        }
+    }
+    throw Exception("Too many iterations while looking for closest point");
 }
 
-Vec4 Mesh::surfaceTangent(Vec4 &n) {
+Face Mesh::closestFaceTo(Vec4 &o) {
     if(!isConvex()) {
-        throw Exception("Mesh must be convex to check surface tangent");
+        throw Exception("Mesh must be convex to find closest face");
     }
-    //TODO
+
+    Vertex pivot = closestVertex(o, Vertex(this, 0));
+    Edge start = pivot.getIncidentEdge();
+    Edge iter = start.cwFrom(pivot);
+    Face best = start.right();
+    int i = 0;
+    while(i++ < edges.length()) {
+        Face f = iter.right();
+
+        ///XXX
+
+        if(iter.getIndex() == start.getIndex()) {
+            return best;
+        }
+    }
+}
+
+bool Mesh::collides(Mesh *o) {
+    if(!isConvex() || !o->isConvex()) {
+        throw Exception("Mesh must be convex to check collision");
+    }
 }

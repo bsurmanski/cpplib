@@ -4,7 +4,7 @@
 #include "cpplib/common/input.hpp"
 #include "cpplib/common/array.hpp"
 #include "cpplib/geom/geometry.hpp"
-#include "cpplib/geom/mesh_attr.hpp"
+#include "cpplib/geom/feature.hpp"
 
 #include <stdint.h>
 
@@ -55,6 +55,7 @@ struct MeshEdgeData {
 };
 
 
+// for collision stuff, Mesh must be a convex mesh that contains the origin.
 struct Mesh {
     MeshHeader header;
     Array<MeshVertexData> verts;
@@ -90,7 +91,8 @@ struct Mesh {
     bool isConvex();
     virtual bool contains(Vec4 &o);
     virtual Vec4 closestPointTo(Vec4 &o);
-    virtual Vec4 surfaceTangent(Vec4 &n);
+    virtual Face closestFaceTo(Vec4 &o); // by voronoi mapping of face normals
+    bool collides(Mesh *o);
 };
 
 #endif
