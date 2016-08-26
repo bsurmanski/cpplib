@@ -2,12 +2,21 @@
 #define _CPPLIB_GEOM_GEOMETRY_HPP
 
 #include "vec.hpp"
+#include <math.h>
 
 class Geometry {
     public:
     virtual ~Geometry(){}
     virtual bool contains(Vec4 &o) = 0;
     virtual Vec4 closestPointTo(Vec4 &o) = 0;
+
+    virtual float dist(Vec4 &o) {
+        return sqrt(distsq(o));
+    }
+
+    virtual float distsq(Vec4 &o) {
+        return (o - closestPointTo(o)).lensq();
+    }
 
     // given an infinite surface with normal '-n', where is the tangent point of
     // this piece of geometry? This Results in the point on this geometry that

@@ -16,6 +16,8 @@ class Ball : public Geometry {
     void scale(float s);
     void move(const Vec4 &dv);
     void move(float x, float y, float z);
+    const Vec4 &center() const { return _center; }
+    float radius() const { return _radius; }
     bool collides(const Ball &o);
     virtual bool contains(Vec4 &o);
     virtual Vec4 closestPointTo(Vec4 &o);
