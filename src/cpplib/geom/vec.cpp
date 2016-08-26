@@ -21,6 +21,10 @@ Vec4 Vec4::createQuat(float angle, const Vec4 &axis) {
     return ret;
 }
 
+bool Vec4::operator==(const Vec4 &o) const {
+    return x == o.x && y == o.y && z == o.z && w == o.w;
+}
+
 Vec4 &Vec4::operator+=(const Vec4 &o) {
     x += o.x;
     y += o.y;
@@ -211,7 +215,10 @@ float Vec4::distance(const Vec4 &o) const {
     return sqrt(distsq(o));
 }
 
-
 void Vec4::print() {
     printf("%f %f %f %f\n", x, y, z, w);
+}
+
+std::ostream& operator<<(std::ostream &os, const Vec4 &v) {
+    return os << "Vec4(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
 }

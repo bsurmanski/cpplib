@@ -1,6 +1,8 @@
 #ifndef _GEOM_VEC_HPP
 #define _GEOM_VEC_HPP
 
+#include <iostream>
+
 class Mat4;
 
 class Vec4 {
@@ -26,6 +28,7 @@ class Vec4 {
     Vec4();
     Vec4(float x, float y, float z, float w=0);
     static Vec4 createQuat(float angle, const Vec4 &axis);
+    bool operator==(const Vec4 &o) const;
     Vec4 &operator+=(const Vec4 &o);
     Vec4 &operator-=(const Vec4 &o);
     Vec4 operator+(const Vec4 &o) const;
@@ -57,5 +60,7 @@ class Vec4 {
     float distance(const Vec4 &o) const;
     void print();
 };
+
+std::ostream& operator<<(std::ostream &os, const Vec4 &v);
 
 #endif
