@@ -28,14 +28,16 @@ class Segment {
     public:
     Segment(const Vec4 &start, const Vec4 &end);
 
+    Vec4 center() const;
+
     Vec4 closestPointTo(const Segment &o) const;
     Vec4 closestPointTo(const Vec4 &o) const;
 
-    float distsq(const Vec4 &o);
-    float distance(const Vec4 &o);
+    float distsq(const Vec4 &o) const;
+    float distance(const Vec4 &o) const;
 
-    float distsq(const Segment &o);
-    float distance(const Segment &o);
+    float distsq(const Segment &o) const;
+    float distance(const Segment &o) const;
 };
 
 #endif

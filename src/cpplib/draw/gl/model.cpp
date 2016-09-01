@@ -1,8 +1,6 @@
 #include "model.hpp"
 
 using GL::Model;
-using GL::Vertex;
-using GL::Face;
 
 Model::Model() {
     glGenBuffers(1, &vbo);

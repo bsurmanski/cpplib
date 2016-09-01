@@ -18,7 +18,8 @@ Vec4 Line::closestPointTo(const Vec4 &o) const {
 
 float Line::distanceSqTo(const Line &o) const {
     // This can likely be done much more efficiently
-    return (closestPointTo(o) - o.closestPointTo(*this)).lensq();
+    Vec4 p1 = closestPointTo(o);
+    return (p1 - o.closestPointTo(p1)).lensq();
 }
 
 float Line::distanceSqTo(const Vec4 &o) const {
@@ -34,6 +35,10 @@ float Line::distanceTo(const Vec4 &o) const {
 }
 
 Segment::Segment(const Vec4 &start, const Vec4 &end) : _start(start), _end(end) {}
+
+Vec4 Segment::center() const {
+    return (_start + _end).scaled(0.5f);
+}
 
 Vec4 Segment::closestPointTo(const Segment &o) const {
     Vec4 d1 = _end - _start;
@@ -59,7 +64,7 @@ Vec4 Segment::closestPointTo(const Vec4 &o) const {
     return skew_point;
 }
 
-float Segment::distsq(const Vec4 &o) {
+float Segment::distsq(const Vec4 &o) const {
     // will either be the distance perpendicular from the point to line (skew),
     // or the distance from one of the segment endings to the point.
     // If the point is between the ends of the line, pick the skew line.
@@ -72,14 +77,15 @@ float Segment::distsq(const Vec4 &o) {
                o.distsq(_end));
 }
 
-float Segment::distance(const Vec4 &o) {
+float Segment::distance(const Vec4 &o) const {
     return sqrt(distsq(o));
 }
 
-float Segment::distsq(const Segment &o) {
-    return (closestPointTo(o) - o.closestPointTo(*this)).lensq();
+float Segment::distsq(const Segment &o) const {
+    Vec4 p1 = closestPointTo(o);
+    return (p1 - o.closestPointTo(p1)).lensq();
 }
 
-float Segment::distance(const Segment &o) {
+float Segment::distance(const Segment &o) const {
     return sqrt(distsq(o));
 }

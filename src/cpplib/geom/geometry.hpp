@@ -7,14 +7,14 @@
 class Geometry {
     public:
     virtual ~Geometry(){}
-    virtual bool contains(Vec4 &o) = 0;
-    virtual Vec4 closestPointTo(Vec4 &o) = 0;
+    virtual bool contains(Vec4 &o) const = 0;
+    virtual Vec4 closestPointTo(Vec4 &o) const = 0;
 
-    virtual float dist(Vec4 &o) {
+    virtual float dist(Vec4 &o) const {
         return sqrt(distsq(o));
     }
 
-    virtual float distsq(Vec4 &o) {
+    virtual float distsq(Vec4 &o) const {
         return (o - closestPointTo(o)).lensq();
     }
 
@@ -25,7 +25,7 @@ class Geometry {
     // Eg. If this is a perfect unit sphere centered at the origin, asking for
     // the surface tangent at (0, 1, 0) will return (0, 1, 0), since this is
     // the further point on the sphere along said normal axis.
-    virtual Vec4 surfaceTangent(Vec4 &n) = 0;
+    virtual Vec4 surfaceTangent(Vec4 &n) const = 0;
 };
 
 #endif

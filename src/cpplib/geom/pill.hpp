@@ -14,21 +14,17 @@ class Pill : public Geometry {
     Vec4 _up; // up orientation vector
 
     public:
-    Pill(const Vec4 &center, float radius, float span);
-    Pill(float x, float y, float z, float radius, float span);
+    Pill(const Vec4 &center, float radius, float span, Vec4 up=Vec4(0, 1, 0));
+    Pill(float x, float y, float z, float radius, float span, Vec4 up=Vec4(0, 1, 0));
     Segment lineSegment() const;
-    void set_center(const Vec4 &center);
-    void set_center(float x, float y, float z);
-    void set_radius(float r);
-    void set_span(float s);
-    void scale(float s);
-    void move(const Vec4 &dv);
-    void move(float x, float y, float z);
-    bool collides(const Ball &o);
-    bool collides(const Pill &o);
-    virtual bool contains(Vec4 &o);
-    virtual Vec4 closestPointTo(Vec4 &o);
-    virtual Vec4 surfaceTangent(Vec4 &n);
+    Pill scaled(float s) const;
+    Pill offset(const Vec4 &dv) const;
+    Pill offset(float x, float y, float z) const;
+    bool collides(const Ball &o) const;
+    bool collides(const Pill &o) const;
+    virtual bool contains(Vec4 &o) const;
+    virtual Vec4 closestPointTo(Vec4 &o) const;
+    virtual Vec4 surfaceTangent(Vec4 &n) const;
 };
 
 #endif
