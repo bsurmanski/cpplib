@@ -37,6 +37,7 @@ xxd_src = ['cpplib/draw/gl/glsl/simple.vs',
 
 test_src = ['test/ball_test.cpp',
             'test/line_test.cpp',
+            'test/pill_test.cpp',
             'test/vec_test.cpp',
             'test/tga_test.cpp',
             'test/mat_test.cpp',

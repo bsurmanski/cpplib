@@ -150,13 +150,15 @@ Vertex Mesh::nextClosestVertex(Vec4 &p, Vertex base) {
 
 Vertex Mesh::closestVertex(Vec4 &p, Vertex start) {
     Vertex closest = start;
-    int i = 0;
-    while(i++ < verts.length()) { // if we search more verts than there are
-        Vertex o = nextClosestVertex(p, closest);
-        if(o.getIndex() == closest.getIndex()) return closest;
-        closest = o;
+    float closest_distsq = closest.getPosition().distsq(p);
+
+    for(int i = 0; i < verts.length(); i++) {
+        if(verts[i].getPosition().distsq(p) < closest_distsq) {
+            Vertex closest = Vertex(this, i);
+            float closest_distsq = closest.getPosition().distsq(p);
+        }
     }
-    throw Exception("Too many iterations while looking for closest vertex");
+    return closest;
 }
 
 bool Mesh::isConvex() {

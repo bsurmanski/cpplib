@@ -31,7 +31,7 @@ bool Pill::collides(const Ball &o) const {
 }
 
 bool Pill::collides(const Pill &o) const {
-    return lineSegment().distsq(o.lineSegment()) < SQ(_radius + o._radius);
+    return lineSegment().distsq(o.lineSegment()) < SQ(o._radius + _radius);
 }
 
 bool Pill::contains(Vec4 &o) const {

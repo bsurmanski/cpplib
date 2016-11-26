@@ -1,6 +1,8 @@
 #include <math.h>
+#include <float.h>
 
 #include "line.hpp"
+#include "cpplib/common/exception.hpp"
 
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 #define MIN3(X,Y,Z) MIN(MIN((X),(Y)),(Z))
@@ -9,6 +11,9 @@ Line::Line(const Vec4 &origin, const Vec4 &vector) : _origin(origin), _vector(ve
 
 Vec4 Line::closestPointTo(const Line &o) const {
     Vec4 n = o._vector.cross(_vector.cross(o._vector));
+    if(n.lensq() == 0.0f) {
+        throw Exception("lines are parallel");
+    }
     return _origin + _vector.scaled((o._origin - _origin).dot(n) / (_vector.dot(n)));
 }
 
@@ -34,6 +39,10 @@ float Line::distanceTo(const Vec4 &o) const {
     return sqrt(distanceSqTo(o));
 }
 
+bool Line::isParallel(const Line &o) const {
+    return fabs(_vector.normalized().dot(o._vector.normalized())) > (1.0 - FLT_EPSILON);
+}
+
 Segment::Segment(const Vec4 &start, const Vec4 &end) : _start(start), _end(end) {}
 
 Vec4 Segment::center() const {
@@ -46,7 +55,12 @@ Vec4 Segment::closestPointTo(const Segment &o) const {
     Line l1(_start, d1);
     Line l2(o._start, d2);
 
-    Vec4 skew_point = l1.closestPointTo(l2);
+    Vec4 skew_point;
+    if(l1.isParallel(l2)) {
+        skew_point = (l1.closestPointTo(o._start) + l1.closestPointTo(o._end)).scaled(0.5f);
+    } else {
+        skew_point = l1.closestPointTo(l2);
+    }
 
     if((skew_point - _start).dot(d1) < 0) return _start;
     if((skew_point - _end).dot(d1) > 0) return _end;
@@ -88,4 +102,12 @@ float Segment::distsq(const Segment &o) const {
 
 float Segment::distance(const Segment &o) const {
     return sqrt(distsq(o));
+}
+
+std::ostream& operator<<(std::ostream &os, const Line &l) {
+    return os << "Line(origin=" << l._origin << ", vector=" << l._vector << ")";
+}
+
+std::ostream& operator<<(std::ostream &os, const Segment &s) {
+    return os << "Segment(start=" << s._start << ", end=" << s._end << ")";
 }

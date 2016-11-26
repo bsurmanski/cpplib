@@ -3,11 +3,13 @@
 
 #include "vec.hpp"
 
+#include <iostream>
+
 class Line {
+    public:
     Vec4 _origin;
     Vec4 _vector;
 
-    public:
     Line(const Vec4 &origin, const Vec4 &vector);
 
     Vec4 closestPointTo(const Line &o) const;
@@ -18,14 +20,16 @@ class Line {
 
     float distanceTo(const Line &o) const;
     float distanceTo(const Vec4 &o) const;
+
+    bool isParallel(const Line &o) const;
 };
 
 // Actually a line segment (between _start and _end)
 class Segment {
+    public:
     Vec4 _start;
     Vec4 _end;
 
-    public:
     Segment(const Vec4 &start, const Vec4 &end);
 
     Vec4 center() const;
@@ -39,5 +43,8 @@ class Segment {
     float distsq(const Segment &o) const;
     float distance(const Segment &o) const;
 };
+
+std::ostream& operator<<(std::ostream &os, const Line &l);
+std::ostream& operator<<(std::ostream &os, const Segment &s);
 
 #endif
